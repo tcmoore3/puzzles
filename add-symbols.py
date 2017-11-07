@@ -5,6 +5,7 @@ Add mathematical signs (  +, - ,),( *,/ ) in between all or some of the above di
 result of the  created mathematical equation will be 100.
 """
 import itertools
+import re
 
 number_string = '524127'
 possible_symbols = set(['+', '-', ')', '(', '*', '/', ''])
@@ -55,6 +56,15 @@ for opening, operators, closing in itertools.product(
             winners.add(expr)
     except:  # syntax error from illegal expression
         pass
-print('Found {0} winning combinations:'.format(len(winners)))
+
+unique_winners = set()
+single_nums_in_parens = [(re.compile('\({0}\)'.format(x)), x) for x in number_string]
 for winner in winners:
+    for regex, snip in single_nums_in_parens:
+        winner = regex.sub(snip, winner)
+    unique_winners.add(winner)
+
+print('Found {0} winning combinations:'.format(len(winners)))
+print('Found {0} unique winning combinations:'.format(len(unique_winners)))
+for winner in unique_winners:
     print('{0} = 100'.format(winner))
